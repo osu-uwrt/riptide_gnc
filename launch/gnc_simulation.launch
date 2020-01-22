@@ -1,11 +1,18 @@
 <launch>
   <arg name="auv_config_path" default="$(find riptide_gnc)/cfg/auv_config_gazebo.yaml"/>
   <arg name="gc_config_path" default="$(find riptide_gnc)/cfg/gc_config.yaml"/>
+  <arg name="ekf_config_path" default="$(find riptide_gnc)/cfg/trans_ekf.yaml" />
 
   <include file="$(find auv_gnc)/launch/guidance_controller.launch">
     <arg name="auv_config_path" value="$(arg auv_config_path)" />
     <arg name="gc_config_path" value="$(arg gc_config_path)" />
   </include>
 
+  <include file="$(find riptide_gnc)/launch/trans_ekf_combinator.launch">
+    <arg name="ekf_config_path" value="$(arg ekf_config_path)" />
+  </include>
+
   <node pkg="riptide_gnc" type="gnc_thrust_converter" name="gnc_thrust_converter" output="screen"/>
+
+  <include file="$(find riptide_gazebo)/launch/maelstrom.launch"/>
 </launch>
