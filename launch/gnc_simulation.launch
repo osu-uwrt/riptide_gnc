@@ -14,5 +14,6 @@
 
   <node pkg="riptide_gnc" type="gnc_thrust_converter" name="gnc_thrust_converter" output="screen"/>
 
-  <include file="$(find riptide_gazebo)/launch/maelstrom.launch"/>
+  <include file="$(find riptide_gazebo)/launch/puddles_lake.launch"/>
+
 </launch>
