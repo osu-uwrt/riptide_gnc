@@ -1,0 +1,10 @@
+<launch>
+
+  <include file="$(find riptide_gnc)/launch/trans_ekf_combinator.launch"/>
+
+  <include file="$(find riptide_gnc)/launch/gnc_thrust_converter.launch"/>
+
+
+  <include file="$(find riptide_gazebo)/launch/puddles_lake.launch"/>
+
+</launch>
