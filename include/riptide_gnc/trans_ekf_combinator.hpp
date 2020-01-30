@@ -6,6 +6,8 @@
 #include "riptide_msgs/Depth.h"
 #include "nortek_dvl/Dvl.h"
 #include "auv_msgs/SixDoF.h"
+#include "geometry_msgs/TwistWithCovarianceStamped.h"
+#include "sensor_msgs/Imu.h"
 #include <algorithm>
 #include "math.h"
 
@@ -21,8 +23,8 @@ private:
   int cb_counter_; // Counts the number of callbacks entered within each spin
 
   void depthCB(const riptide_msgs::Depth::ConstPtr &depth);
-  void imuCB(const riptide_msgs::Imu::ConstPtr &imu);
-  void dvlCB(const nortek_dvl::Dvl::ConstPtr &dvl);
+  void imuCB(const sensor_msgs::Imu::ConstPtr &imu);
+  void dvlCB(const geometry_msgs::TwistWithCovarianceStamped::ConstPtr &dvl);
 
 public:
   TransEKFCombinator(ros::NodeHandle nh);
