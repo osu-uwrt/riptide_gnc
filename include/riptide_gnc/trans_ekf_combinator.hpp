@@ -2,12 +2,13 @@
 #define TRANS_EKF_COMBINATOR
 
 #include "ros/ros.h"
-#include "riptide_msgs/Imu.h"
 #include "riptide_msgs/Depth.h"
 #include "nortek_dvl/Dvl.h"
 #include "auv_msgs/SixDoF.h"
 #include "geometry_msgs/TwistWithCovarianceStamped.h"
 #include "sensor_msgs/Imu.h"
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#include <tf2/LinearMath/Quaternion.h>
 #include <algorithm>
 #include "math.h"
 
