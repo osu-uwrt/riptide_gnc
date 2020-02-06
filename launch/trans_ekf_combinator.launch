@@ -5,5 +5,5 @@
     <arg name="ekf_config_path" value="$(arg ekf_config_path)" />
   </include>
 
-  <node pkg="riptide_gnc" type="trans_ekf_combinator" name="trans_ekf_combinator" output="screen"/>
+  <node pkg="riptide_gnc" type="trans_ekf_combinator" name="trans_ekf_combinator" output="screen" ns="puddles" />
 </launch>

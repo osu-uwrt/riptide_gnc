@@ -2,15 +2,21 @@
 #define TRANS_EKF_COMBINATOR
 
 #include "ros/ros.h"
+#include <tf/tf.h>
 #include "riptide_msgs/Depth.h"
 #include "nortek_dvl/Dvl.h"
 #include "auv_msgs/SixDoF.h"
 #include "geometry_msgs/TwistWithCovarianceStamped.h"
 #include "sensor_msgs/Imu.h"
+#include "eigen3/Eigen/Core"
+#include "eigen3/Eigen/Dense"
+#include "eigen_conversions/eigen_msg.h"
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 #include <tf2/LinearMath/Quaternion.h>
 #include <algorithm>
 #include "math.h"
+#include "auv_core/auv_core_headers.hpp"
+
 
 namespace riptide_gnc
 {
@@ -21,6 +27,7 @@ private:
   ros::Subscriber depth_sub_, imu_sub_, dvl_sub_;
   ros::Publisher six_dof_pub_;
   auv_msgs::SixDoF six_dof_msg_;
+  Eigen::Quaterniond quatNED_, quatENU_, quatBodyFixedENU2NED_;
   int cb_counter_; // Counts the number of callbacks entered within each spin
 
   void depthCB(const riptide_msgs::Depth::ConstPtr &depth);

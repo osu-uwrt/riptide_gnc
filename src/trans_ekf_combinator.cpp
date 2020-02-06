@@ -9,11 +9,14 @@ TransEKFCombinator::TransEKFCombinator(ros::NodeHandle nh)
    std::string trans_ekf_sub_topic;
    nh_.param<std::string>("auv_gnc/trans_ekf/subscriber_topic", trans_ekf_sub_topic, std::string("/puddles/auv_gnc/trans_ekf/input_data"));
 
-   depth_sub_ = nh_.subscribe<riptide_msgs::Depth>("/puddles/depth/raw", 1, &TransEKFCombinator::depthCB, this);
-   imu_sub_ = nh_.subscribe<sensor_msgs::Imu>("/puddles/imu/data", 1, &TransEKFCombinator::imuCB, this);
-   dvl_sub_ = nh_.subscribe<geometry_msgs::TwistWithCovarianceStamped>("/puddles/dvl_twist", 1, &TransEKFCombinator::dvlCB, this);
+   depth_sub_ = nh_.subscribe<riptide_msgs::Depth>("depth/raw", 1, &TransEKFCombinator::depthCB, this);
+   imu_sub_ = nh_.subscribe<sensor_msgs::Imu>("imu/data", 1, &TransEKFCombinator::imuCB, this);
+   dvl_sub_ = nh_.subscribe<geometry_msgs::TwistWithCovarianceStamped>("dvl_twist", 1, &TransEKFCombinator::dvlCB, this);
 
-   six_dof_pub_ = nh_.advertise<auv_msgs::SixDoF>("/puddles/auv_gnc/trans_ekf/input_data", 1);
+   six_dof_pub_ = nh_.advertise<auv_msgs::SixDoF>("auv_gnc/trans_ekf/input_data", 1);
+
+    quatBodyFixedENU2NED_ = auv_core::rot3d::rpy2Quat(M_PI, 0, 0);
+   
 }
 
 int TransEKFCombinator::getCBCounter()
@@ -49,16 +52,26 @@ void TransEKFCombinator::imuCB(const sensor_msgs::Imu::ConstPtr &imu)
    double x;
    double y;
    double z;
+
+   tf::quaternionMsgToEigen(imu->orientation, quatENU_);
    
-   tf2::Quaternion quat;
+   // Quaternion rotated 90 deg in yaw
+   Eigen::Quaterniond quat1 = auv_core::rot3d::rpy2Quat(0, 0, M_PI / 2.0);
 
-   tf2::convert(imu->orientation, quat);
+   // Quaternion difference from quat1 to quatENU
+   Eigen::Quaterniond qDiff = quat1.conjugate() * quatENU_; // qDiff = q1.conjugate() * q2
+   Eigen::Vector4d angleAxis1 = auv_core::rot3d::quat2AngleAxis(qDiff); // Angle Axis format
 
-   tf2::Matrix3x3(quat).getRPY(x,y,z);
+   Eigen::Vector4d angleAxis2 = Eigen::Vector4d::Zero();
+   angleAxis2(0) = angleAxis1(0);  // Angle remains unchanged
+   angleAxis2(1) = angleAxis1(1);  // X component remains unchanged
+   angleAxis2(2) = -angleAxis1(2); // Negate y compoennt
+   angleAxis2(3) = -angleAxis1(3); // Negate z component
 
-   quat.setRPY(y,x,-z);
+   qDiff = auv_core::rot3d::angleAxis2Quat(angleAxis2); // Convert to quaternion
 
-   six_dof_msg_.pose.orientation = tf2::toMsg(quat);
+   tf::quaternionEigenToMsg(qDiff, six_dof_msg_.pose.orientation);
+
 
    //six_dof_msg_.pose.orientation.x = imu->orientation.x;
    //six_dof_msg_.pose.orientation.y = imu->orientation.y;

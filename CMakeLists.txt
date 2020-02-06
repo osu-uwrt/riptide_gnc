@@ -12,6 +12,10 @@ find_package(catkin REQUIRED COMPONENTS
   riptide_msgs
   auv_gnc
   auv_msgs
+  tf
+  tf_conversions
+  eigen_conversions
+  auv_core
 )
 
 find_package(Eigen3 REQUIRED)
