@@ -1,4 +1,4 @@
-subscriber_topic: /puddles/auv_gnc/trans_ekf/input_data
+subscriber_topic: /puddles/trans_ekf_combinator/auv_gnc/input_data
 publisher_topic: /puddles/auv_gnc/trans_ekf/six_dof1
 
 position_sensing: [false, false, true] # Indicates if X,Y,Z axes have inertial position

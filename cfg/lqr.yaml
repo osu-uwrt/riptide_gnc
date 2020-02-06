@@ -13,7 +13,7 @@
 # 3. Q_diag is for the un-augmented system (Xstate only) and must have 12 elements, since Q is a 12x12 matrix
 # 4. Q_int_diag is for the error states (Xintegral)
 # 3. R_diag must have 8 elements
-enable_LQR_integral: true
+enable_LQR_integral: false
 Q_diag: [400.0, 400.0, 400.0, 100.0, 100.0, 100.0, 1000.0, 1000.0, 1000.0, 100.0, 100.0, 100.0]
 Q_integral_diag: [400.0, 400.0, 400.0, 500.0, 500.0, 500.0]
 R_diag: [0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01]

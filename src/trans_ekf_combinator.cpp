@@ -7,13 +7,13 @@ TransEKFCombinator::TransEKFCombinator(ros::NodeHandle nh)
    nh_ = nh;
 
    std::string trans_ekf_sub_topic;
-   nh_.param<std::string>("auv_gnc/trans_ekf/subscriber_topic", trans_ekf_sub_topic, std::string("/puddles/auv_gnc/trans_ekf/input_data"));
+   nh_.param<std::string>("auv_gnc/trans_ekf/subscriber_topic", trans_ekf_sub_topic, std::string("/puddles/trans_ekf_combinator/auv_gnc/input_data"));
 
    depth_sub_ = nh_.subscribe<riptide_msgs::Depth>("depth/raw", 1, &TransEKFCombinator::depthCB, this);
    imu_sub_ = nh_.subscribe<sensor_msgs::Imu>("imu/data", 1, &TransEKFCombinator::imuCB, this);
    dvl_sub_ = nh_.subscribe<geometry_msgs::TwistWithCovarianceStamped>("dvl_twist", 1, &TransEKFCombinator::dvlCB, this);
 
-   six_dof_pub_ = nh_.advertise<auv_msgs::SixDoF>("auv_gnc/trans_ekf/input_data", 1);
+   six_dof_pub_ = nh_.advertise<auv_msgs::SixDoF>("auv_gnc/input_data", 1);
 
     quatBodyFixedENU2NED_ = auv_core::rot3d::rpy2Quat(M_PI, 0, 0);
    
