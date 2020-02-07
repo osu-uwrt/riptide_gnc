@@ -9,7 +9,7 @@ GNCThrustConverter::GNCThrustConverter(ros::NodeHandle nh)
    std::string gnc_thrust_sub_topic;
    nh_.param<std::string>("auv_gnc/guidance_controller/publisher_topic", gnc_thrust_sub_topic, std::string("auv_gnc/guidance_controller/thrust"));
 
-   gnc_thrust_sub_ = nh_.subscribe<auv_msgs::Thrust>(gnc_thrust_sub_topic, 1, &GNCThrustConverter::gncThrustCB, this);
+   gnc_thrust_sub_ = nh_.subscribe<auv_msgs::Thrust>("auv_gnc/guidance_controller/thrust", 1, &GNCThrustConverter::gncThrustCB, this);
    riptide_thrust_pub_ = nh_.advertise<riptide_msgs::ThrustStamped>("command/thrust", 1);
 }
 

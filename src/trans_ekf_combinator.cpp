@@ -84,7 +84,7 @@ void TransEKFCombinator::imuCB(const sensor_msgs::Imu::ConstPtr &imu)
 
    six_dof_msg_.linear_accel.x = imu->linear_acceleration.y;
    six_dof_msg_.linear_accel.y = imu->linear_acceleration.x;
-   six_dof_msg_.linear_accel.z = -(imu->linear_acceleration.z);
+   six_dof_msg_.linear_accel.z = (-(imu->linear_acceleration.z))-9.816;// remove gravity
    cb_counter_++;
 }
 
