@@ -5,7 +5,8 @@
 #                 Positive Z points down (to the ground)
 Fg: 400.7 # Weight in air, [N]
 Fb: 412.0 # Buoyant Force, [N]
-center_of_buoyancy: [0.02, 0.0, -0.03] # CoB location relative to center of mass (X [m], Y [m], Z [m])
+#center_of_buoyancy: [0.02, 0.0, -0.03] # CoB location relative to center of mass (X [m], Y [m], Z [m])
+center_of_buoyancy: [0.02,0.0,0.03]
 # CoM location relative to some reference point on the vehicle (X [m], Y [m], Z [m]), since it's often easier to measure from a known, well-defined point.
 # If reference point is the CoM itself, then set to all zeroes.
 center_of_mass: [0.0, 0.0, 0.0]
@@ -15,7 +16,7 @@ inertia: { # Inertias [kg-m^2]
   Izz: 3.65,
   Ixy: 0.0,
   Ixz: 0.0,
-  Iyz: 0.0  
+  Iyz: 0.0   
 }
 translational_drag: { # In the order of X, Y, Z axes
   linear: [17.0, 44.0, 44.0], # Fdrag = -c*Xdot [N], where c = drag coeff
@@ -36,48 +37,56 @@ thrusters: [
     id: 0,
     name: "HPF",
     enable: true,
-    pose: [0.37273, -0.18946, 0.01509, 0.0, 90.0]
+    #pose: [0.37273, -0.18946, 0.01509, 0.0, 90.0]
+    pose:  [0.8255, 0.12065, 0.257175, 2.35619, 0.0]
   },
   {
     id: 1,
     name: "HPA",
     enable: true,
-    pose: [-0.37273, -0.18946, 0.01509, 0.0, 90.0]
+    #pose: [-0.37273, -0.18946, 0.01509, 0.0, 90.0]
+    pose: [0.8255, -0.48895, 0.257175, -2.35619, 0.0]
   },
   {
     id: 2,
     name: "HSF",
     enable: true,
-    pose: [0.37273, 0.18946, 0.01509, 0.0, 90.0]
+    #pose: [0.37273, 0.18946, 0.01509, 0.0, 90.0]
+    pose: [0.03175, 0.12065, 0.257175, 0.78540, 0.0]
   },
   {
     id: 3,
     name: "HSA",
     enable: true,
-    pose: [-0.37273, 0.18946, 0.01509, 0.0, 90.0]
+    #pose: [-0.37273, 0.18946, 0.01509, 0.0, 90.0]
+    pose: [0.03175, -0.48895, 0.257175, -0.78540, 0.0 ]
   },
   {
     id: 4,
     name: "VPF",
     enable: true,
-    pose: [0.398, -0.29921, -0.10615, -135.0, 0.0]
+    #pose: [0.398, -0.29921, -0.10615, -135.0, 0.0]
+    pose: [0.7747, 0, 0.161925, 0.0, -1.57079] 
   },
   {
     id: 5,
     name: "VPA",
     enable: true,
-    pose: [-0.398, -0.29921, -0.10615, -45.0, 0.0]
+    #pose: [-0.398, -0.29921, -0.10615, -45.0, 0.0]
+    pose: [0.7747, -0.3683, 0.161925, 0.0, -1.57079]
   },
   {
     id: 6,
     name: "VSF",
     enable: true,
-    pose: [0.398, 0.29921, -0.10615, 135.0, 0.0]
+    #pose: [0.398, 0.29921, -0.10615, 135.0, 0.0]
+    pose: [0.08255, 0, 0.161925, 0.0,-1.57079]
   },
   {
     id: 7,
     name: "VSA",
     enable: true,
-    pose: [-0.398, 0.29921, -0.10615, 45.0, 0.0]
+    #pose: [-0.398, 0.29921, -0.10615, 45.0, 0.0]
+    pose: [0.08255, -0.3683, 0.161925, 0.0, -1.57079]
   }
 ]
