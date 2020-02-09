@@ -13,7 +13,7 @@ TransEKFCombinator::TransEKFCombinator(ros::NodeHandle nh)
    imu_sub_ = nh_.subscribe<sensor_msgs::Imu>("imu/data", 1, &TransEKFCombinator::imuCB, this);
    dvl_sub_ = nh_.subscribe<geometry_msgs::TwistWithCovarianceStamped>("dvl_twist", 1, &TransEKFCombinator::dvlCB, this);
 
-   six_dof_pub_ = nh_.advertise<auv_msgs::SixDoF>("auv_gnc/input_data", 1);
+   six_dof_pub_ = nh_.advertise<auv_msgs::SixDoF>("/puddles/auv_gnc/input_data", 1);
 
     quatBodyFixedENU2NED_ = auv_core::rot3d::rpy2Quat(M_PI, 0, 0);
    
