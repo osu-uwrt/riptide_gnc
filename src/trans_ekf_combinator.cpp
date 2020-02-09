@@ -78,12 +78,12 @@ void TransEKFCombinator::imuCB(const sensor_msgs::Imu::ConstPtr &imu)
    //six_dof_msg_.pose.orientation.z = imu->orientation.z;
    //six_dof_msg_.pose.orientation.w = imu->orientation.w;
 
-   six_dof_msg_.velocity.angular.x = imu->angular_velocity.y;
-   six_dof_msg_.velocity.angular.y = imu->angular_velocity.x;
+   six_dof_msg_.velocity.angular.x = imu->angular_velocity.x;
+   six_dof_msg_.velocity.angular.y = -(imu->angular_velocity.y);
    six_dof_msg_.velocity.angular.z = -(imu->angular_velocity.z);
 
-   six_dof_msg_.linear_accel.x = imu->linear_acceleration.y;
-   six_dof_msg_.linear_accel.y = imu->linear_acceleration.x;
+   six_dof_msg_.linear_accel.x = imu->linear_acceleration.x;
+   six_dof_msg_.linear_accel.y = -(imu->linear_acceleration.y);
    six_dof_msg_.linear_accel.z = (-(imu->linear_acceleration.z))+9.816;// remove gravity
    cb_counter_++;
 }
@@ -98,8 +98,8 @@ void TransEKFCombinator::dvlCB(const geometry_msgs::TwistWithCovarianceStamped::
    if (!isnan(dvl->twist.twist.linear.x)) // There is no easy way to handle the DVL outputting nan
    {
       //ENU to NED
-      six_dof_msg_.velocity.linear.x = dvl->twist.twist.linear.y;
-      six_dof_msg_.velocity.linear.y = dvl->twist.twist.linear.x;
+      six_dof_msg_.velocity.linear.x = dvl->twist.twist.linear.x;
+      six_dof_msg_.velocity.linear.y = -(dvl->twist.twist.linear.y);
       six_dof_msg_.velocity.linear.z = -(dvl->twist.twist.linear.z);
    }
    cb_counter_++;
