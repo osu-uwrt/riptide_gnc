@@ -9,11 +9,11 @@ TransEKFCombinator::TransEKFCombinator(ros::NodeHandle nh)
    std::string trans_ekf_sub_topic;
    nh_.param<std::string>("auv_gnc/trans_ekf/subscriber_topic", trans_ekf_sub_topic, std::string("/puddles/auv_gnc/input_data"));
 
-   depth_sub_ = nh_.subscribe<riptide_msgs::Depth>("depth/raw", 1, &TransEKFCombinator::depthCB, this);
-   imu_sub_ = nh_.subscribe<sensor_msgs::Imu>("imu/data", 1, &TransEKFCombinator::imuCB, this);
-   dvl_sub_ = nh_.subscribe<geometry_msgs::TwistWithCovarianceStamped>("dvl_twist", 1, &TransEKFCombinator::dvlCB, this);
+   depth_sub_ = nh_.subscribe<riptide_msgs::Depth>("/puddles/depth/raw", 1, &TransEKFCombinator::depthCB, this);
+   imu_sub_ = nh_.subscribe<sensor_msgs::Imu>("/puddles/imu/data", 1, &TransEKFCombinator::imuCB, this);
+   dvl_sub_ = nh_.subscribe<geometry_msgs::TwistWithCovarianceStamped>("/puddles/dvl_twist", 1, &TransEKFCombinator::dvlCB, this);
 
-   six_dof_pub_ = nh_.advertise<auv_msgs::SixDoF>("auv_gnc/input_data", 1);
+   six_dof_pub_ = nh_.advertise<auv_msgs::SixDoF>("/puddles/auv_gnc/input_data", 1);
 
     quatBodyFixedENU2NED_ = auv_core::rot3d::rpy2Quat(M_PI, 0, 0);
    
@@ -84,7 +84,7 @@ void TransEKFCombinator::imuCB(const sensor_msgs::Imu::ConstPtr &imu)
 
    six_dof_msg_.linear_accel.x = imu->linear_acceleration.x;
    six_dof_msg_.linear_accel.y = -(imu->linear_acceleration.y);
-   six_dof_msg_.linear_accel.z = (-(imu->linear_acceleration.z))+9.816;// remove gravity
+   six_dof_msg_.linear_accel.z = -(imu->linear_acceleration.z);// remove gravity
    cb_counter_++;
 }
 
