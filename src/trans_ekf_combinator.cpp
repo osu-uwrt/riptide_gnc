@@ -9,9 +9,9 @@ TransEKFCombinator::TransEKFCombinator(ros::NodeHandle nh)
    std::string trans_ekf_sub_topic;
    nh_.param<std::string>("auv_gnc/trans_ekf/subscriber_topic", trans_ekf_sub_topic, std::string("/puddles/auv_gnc/input_data"));
 
-   depth_sub_ = nh_.subscribe<riptide_msgs::Depth>("depth/raw", 1, &TransEKFCombinator::depthCB, this);
-   imu_sub_ = nh_.subscribe<sensor_msgs::Imu>("imu/data", 1, &TransEKFCombinator::imuCB, this);
-   dvl_sub_ = nh_.subscribe<geometry_msgs::TwistWithCovarianceStamped>("dvl_twist", 1, &TransEKFCombinator::dvlCB, this);
+   depth_sub_ = nh_.subscribe<riptide_msgs::Depth>("/puddles/depth/raw", 1, &TransEKFCombinator::depthCB, this);
+   imu_sub_ = nh_.subscribe<sensor_msgs::Imu>("/puddles/imu/data", 1, &TransEKFCombinator::imuCB, this);
+   dvl_sub_ = nh_.subscribe<geometry_msgs::TwistWithCovarianceStamped>("/puddles/dvl_twist", 1, &TransEKFCombinator::dvlCB, this);
 
    six_dof_pub_ = nh_.advertise<auv_msgs::SixDoF>("/puddles/auv_gnc/input_data", 1);
 
@@ -38,7 +38,7 @@ void TransEKFCombinator::depthCB(const riptide_msgs::Depth::ConstPtr &depth)
    if (time2 > time1)
       six_dof_msg_.header.stamp = depth->header.stamp;
 
-   six_dof_msg_.pose.position.z = -(depth->depth);
+   six_dof_msg_.pose.position.z = depth->depth;
    cb_counter_++;
 }
 
@@ -52,7 +52,7 @@ void TransEKFCombinator::imuCB(const sensor_msgs::Imu::ConstPtr &imu)
    double x;
    double y;
    double z;
-
+   /*
    tf::quaternionMsgToEigen(imu->orientation, quatENU_);
    
    // Quaternion rotated 90 deg in yaw
@@ -72,19 +72,19 @@ void TransEKFCombinator::imuCB(const sensor_msgs::Imu::ConstPtr &imu)
 
    tf::quaternionEigenToMsg(qDiff, six_dof_msg_.pose.orientation);
 
+   */
+   six_dof_msg_.pose.orientation.x = imu->orientation.x;
+   six_dof_msg_.pose.orientation.y = imu->orientation.y;
+   six_dof_msg_.pose.orientation.z = imu->orientation.z;
+   six_dof_msg_.pose.orientation.w = imu->orientation.w;
 
-   //six_dof_msg_.pose.orientation.x = imu->orientation.x;
-   //six_dof_msg_.pose.orientation.y = imu->orientation.y;
-   //six_dof_msg_.pose.orientation.z = imu->orientation.z;
-   //six_dof_msg_.pose.orientation.w = imu->orientation.w;
+   six_dof_msg_.velocity.angular.x = imu->angular_velocity.x;
+   six_dof_msg_.velocity.angular.y = imu->angular_velocity.y;
+   six_dof_msg_.velocity.angular.z = imu->angular_velocity.z;
 
-   six_dof_msg_.velocity.angular.x = imu->angular_velocity.y;
-   six_dof_msg_.velocity.angular.y = imu->angular_velocity.x;
-   six_dof_msg_.velocity.angular.z = -(imu->angular_velocity.z);
-
-   six_dof_msg_.linear_accel.x = imu->linear_acceleration.y;
-   six_dof_msg_.linear_accel.y = imu->linear_acceleration.x;
-   six_dof_msg_.linear_accel.z = (-(imu->linear_acceleration.z))+9.816;// remove gravity
+   six_dof_msg_.linear_accel.x = imu->linear_acceleration.x;
+   six_dof_msg_.linear_accel.y = imu->linear_acceleration.y;
+   six_dof_msg_.linear_accel.z = imu->linear_acceleration.z;
    cb_counter_++;
 }
 
@@ -98,9 +98,9 @@ void TransEKFCombinator::dvlCB(const geometry_msgs::TwistWithCovarianceStamped::
    if (!isnan(dvl->twist.twist.linear.x)) // There is no easy way to handle the DVL outputting nan
    {
       //ENU to NED
-      six_dof_msg_.velocity.linear.x = dvl->twist.twist.linear.y;
-      six_dof_msg_.velocity.linear.y = dvl->twist.twist.linear.x;
-      six_dof_msg_.velocity.linear.z = -(dvl->twist.twist.linear.z);
+      six_dof_msg_.velocity.linear.x = dvl->twist.twist.linear.x;
+      six_dof_msg_.velocity.linear.y = dvl->twist.twist.linear.y;
+      six_dof_msg_.velocity.linear.z = dvl->twist.twist.linear.z;
    }
    cb_counter_++;
 
