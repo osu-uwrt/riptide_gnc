@@ -15,7 +15,7 @@ TransEKFCombinator::TransEKFCombinator(ros::NodeHandle nh)
 
    six_dof_pub_ = nh_.advertise<auv_msgs::SixDoF>("/puddles/auv_gnc/input_data", 1);
 
-    quatBodyFixedENU2NED_ = auv_core::rot3d::rpy2Quat(M_PI, 0, 0);
+    //quatBodyFixedENU2NED_ = auv_core::rot3d::rpy2Quat(M_PI, 0, 0);
    
 }
 
@@ -52,7 +52,7 @@ void TransEKFCombinator::imuCB(const sensor_msgs::Imu::ConstPtr &imu)
    double x;
    double y;
    double z;
-
+   /*
    tf::quaternionMsgToEigen(imu->orientation, quatENU_);
    
    // Quaternion rotated 90 deg in yaw
@@ -72,11 +72,12 @@ void TransEKFCombinator::imuCB(const sensor_msgs::Imu::ConstPtr &imu)
 
    tf::quaternionEigenToMsg(qDiff, six_dof_msg_.pose.orientation);
 
+   */
 
-   //six_dof_msg_.pose.orientation.x = imu->orientation.x;
-   //six_dof_msg_.pose.orientation.y = imu->orientation.y;
-   //six_dof_msg_.pose.orientation.z = imu->orientation.z;
-   //six_dof_msg_.pose.orientation.w = imu->orientation.w;
+   six_dof_msg_.pose.orientation.x = imu->orientation.x;
+   six_dof_msg_.pose.orientation.y = imu->orientation.y;
+   six_dof_msg_.pose.orientation.z = imu->orientation.z;
+   six_dof_msg_.pose.orientation.w = imu->orientation.w;
 
    six_dof_msg_.velocity.angular.x = imu->angular_velocity.x;
    six_dof_msg_.velocity.angular.y = -(imu->angular_velocity.y);
