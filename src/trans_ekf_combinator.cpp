@@ -7,7 +7,7 @@ TransEKFCombinator::TransEKFCombinator(ros::NodeHandle nh)
    nh_ = nh;
 
    std::string trans_ekf_sub_topic;
-   nh_.param<std::string>("auv_gnc/trans_ekf/subscriber_topic", trans_ekf_sub_topic, std::string("/puddles/auv_gnc/input_data"));
+   nh_.param<std::string>("/auv_gnc/trans_ekf/subscriber_topic", trans_ekf_sub_topic, std::string("/puddles/auv_gnc/input_data"));
 
    depth_sub_ = nh_.subscribe<riptide_msgs::Depth>("/puddles/depth/raw", 1, &TransEKFCombinator::depthCB, this);
    imu_sub_ = nh_.subscribe<sensor_msgs::Imu>("/puddles/imu/data", 1, &TransEKFCombinator::imuCB, this);
