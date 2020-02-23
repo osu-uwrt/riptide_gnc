@@ -14,6 +14,7 @@ TransEKFCombinator::TransEKFCombinator(ros::NodeHandle nh)
    dvl_sub_ = nh_.subscribe<geometry_msgs::TwistWithCovarianceStamped>("/puddles/dvl_twist", 1, &TransEKFCombinator::dvlCB, this);
 
    six_dof_pub_ = nh_.advertise<auv_msgs::SixDoF>("/puddles/auv_gnc/input_data", 1);
+   cb_counter_ = 0;
 
     //quatBodyFixedENU2NED_ = auv_core::rot3d::rpy2Quat(M_PI, 0, 0);
    
@@ -52,10 +53,29 @@ void TransEKFCombinator::imuCB(const sensor_msgs::Imu::ConstPtr &imu)
    double x;
    double y;
    double z;
-   /*
-   tf::quaternionMsgToEigen(imu->orientation, quatENU_);
    
+   Eigen::Vector3d ENURPY;
+   
+   tf::quaternionMsgToEigen(imu->orientation, quatENU_);
+
+   ENURPY = auv_core::rot3d::quat2RPY(quatENU_);
+
+   ROS_INFO("R: %f; P: %f; Y: %f \n", ENURPY(0), ENURPY(1), ENURPY(2));
+
+   ENURPY(1) = -ENURPY(1);
+   ENURPY(2) = -ENURPY(2);
+  
+
+   Eigen::Quaterniond qDiff = auv_core::rot3d::rpy2Quat(ENURPY(0), ENURPY(1), ENURPY(2));
+   tf::quaternionEigenToMsg(qDiff, six_dof_msg_.pose.orientation);
+
+   // 
+
+  // quatENU_.fromRPY(x,(-y),(-z));
+
+    
    // Quaternion rotated 90 deg in yaw
+   /*
    Eigen::Quaterniond quat1 = auv_core::rot3d::rpy2Quat(0, 0, M_PI / 2.0);
 
    // Quaternion difference from quat1 to quatENU
@@ -70,14 +90,15 @@ void TransEKFCombinator::imuCB(const sensor_msgs::Imu::ConstPtr &imu)
 
    qDiff = auv_core::rot3d::angleAxis2Quat(angleAxis2); // Convert to quaternion
 
-   tf::quaternionEigenToMsg(qDiff, six_dof_msg_.pose.orientation);
-
+   
    */
 
+   /*
    six_dof_msg_.pose.orientation.x = imu->orientation.x;
    six_dof_msg_.pose.orientation.y = imu->orientation.y;
    six_dof_msg_.pose.orientation.z = imu->orientation.z;
    six_dof_msg_.pose.orientation.w = imu->orientation.w;
+   */
 
    six_dof_msg_.velocity.angular.x = imu->angular_velocity.x;
    six_dof_msg_.velocity.angular.y = -(imu->angular_velocity.y);
